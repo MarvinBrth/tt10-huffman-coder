@@ -1,40 +1,97 @@
-# SPDX-FileCopyrightText: © 2024 Tiny Tapeout
-# SPDX-License-Identifier: Apache-2.0
-
 import cocotb
+from cocotb.triggers import RisingEdge, ClockCycles
 from cocotb.clock import Clock
-from cocotb.triggers import ClockCycles
 
+async def reset(dut, cycles=5):
+    """Führt einen kurzen Reset für das DUT durch, bevor es in den normalen Arbeitsmodus übergeht."""
+    cocotb.log.info("🔄 Reset wird aktiviert.")
+    dut.rst_n.value = 0  # Reset aktiv (LOW)
+    await ClockCycles(dut.clk, cycles)  # Halte Reset für einige Taktzyklen
+    dut.rst_n.value = 1  # Reset deaktivieren
+    await ClockCycles(dut.clk, 2)  # Warte auf Stabilisierung
+    cocotb.log.info(f"✅ Reset deaktiviert. rst_n = {dut.rst_n.value}")
 
 @cocotb.test()
-async def test_project(dut):
-    dut._log.info("Start")
+async def test_tt_um_huffman_coder(dut):
+    """Testet den tt_um_huffman_coder mit verschiedenen Zeichen und stellt sicher, dass `load` 
+    lange genug HIGH bleibt, bis `valid_out` für mindestens 4 Takte HIGH war."""
 
-    # Set the clock period to 10 us (100 KHz)
-    clock = Clock(dut.clk, 10, units="us")
+    # Starte den Clock
+    clock = Clock(dut.clk, 10, units="ns")
     cocotb.start_soon(clock.start())
 
-    # Reset
-    dut._log.info("Reset")
-    dut.ena.value = 1
-    dut.ui_in.value = 0
-    dut.uio_in.value = 0
-    dut.rst_n.value = 0
-    await ClockCycles(dut.clk, 10)
-    dut.rst_n.value = 1
+    # Reset durchführen
+    await reset(dut)
 
-    dut._log.info("Test project behavior")
+    # **Startet die Zeichen-Eingabe direkt nach dem Reset**
+    await ClockCycles(dut.clk, 5)  # Nur kurz warten
 
-    # Set the input values you want to test
-    dut.ui_in.value = 20
-    dut.uio_in.value = 30
+    # Speichert die Anzahl erfolgreicher Tests
+    tests_passed = 0
 
-    # Wait for one clock cycle to see the output values
-    await ClockCycles(dut.clk, 1)
+    # Testfälle: ASCII-Zeichen -> (Erwarteter Huffman-Code, Länge)
+    test_cases = {
+        ord(' '): (0b111, 3),    # Leerzeichen
+        ord('e'): (0b010, 3),    # 'e'
+        ord('t'): (0b1101, 4),   # 't'
+        ord('a'): (0b1011, 4),   # 'a'
+        ord('?'): (0b1100000101, 10)  # Default-Fall
+    }
 
-    # The following assersion is just an example of how to check the output values.
-    # Change it to match the actual expected output of your module:
-    assert dut.uo_out.value == 50
+    for ascii_value, (expected_code, expected_length) in test_cases.items():
+        cocotb.log.info(f"🔹 Teste Zeichen: {chr(ascii_value)} (0x{ascii_value:02x})")
 
-    # Keep testing the module by changing the input values, waiting for
-    # one or more clock cycles, and asserting the expected output values.
+        # **ASCII setzen, aber `load` noch nicht HIGH**
+        dut.ui_in.value = ascii_value & 0x7F  # ASCII bleibt in ui_in[6:0]
+        await ClockCycles(dut.clk, 1)  # Einen Takt warten
+
+        # **Jetzt `load` HIGH setzen**
+        dut.ui_in.value = (1 << 7) | (ascii_value & 0x7F)  # MSB=1 für LOAD
+        cocotb.log.info(f"🚀 `load` HIGH für ASCII={chr(ascii_value)}")
+
+        # **Warten, bis `valid_out` mindestens 4 Takte HIGH bleibt**
+        valid_high_count = 0
+        while valid_high_count < 4:
+            await RisingEdge(dut.clk)
+            if int(dut.uio_out.value) & 0b100:  # **valid_out ist Bit 2 von uio_out**
+                valid_high_count += 1
+            else:
+                valid_high_count = 0  # Falls valid_out wieder LOW geht, neu zählen
+
+        cocotb.log.info(f"✅ `valid_out` war mindestens 4 Takte HIGH für ASCII={chr(ascii_value)}")
+
+        # **Jetzt `load` wieder deaktivieren**
+        dut.ui_in.value = ascii_value & 0x7F  # MSB=0, ASCII bleibt in ui_in[6:0]
+        cocotb.log.info(f"⬇ `load` LOW für ASCII={chr(ascii_value)}")
+
+        # **Huffman-Code auslesen**
+        huffman_out = ((int(dut.uio_out.value) & 0b11) << 8) | (int(dut.uo_out.value) & 0xFF)  
+        length_out = (int(dut.uio_out.value) >> 3) & 0xF  # Länge aus Bits 6:3 extrahieren
+
+        # **Debug-Ausgabe**
+        cocotb.log.info(f"✅ Erwartet: Huffman={bin(expected_code)}, Länge={expected_length} | "
+                        f"Empfangen: Huffman={bin(huffman_out)}, Länge={length_out}")
+
+        # **Validierung**
+        assert huffman_out == expected_code, (
+            f"❌ Fehler für ASCII={chr(ascii_value)}: Erwarteter Huffman-Code {bin(expected_code)}, "
+            f"aber {bin(huffman_out)} erhalten."
+        )
+        assert length_out == expected_length, (
+            f"❌ Fehler für ASCII={chr(ascii_value)}: Erwartete Länge {expected_length}, "
+            f"aber {length_out} erhalten."
+        )
+
+        # **Falls erfolgreich, erhöhe Zähler**
+        tests_passed += 1
+
+        # **Kurze Pause vor dem nächsten Zeichen**
+        await ClockCycles(dut.clk, 5)
+
+    # **Falls alle Tests erfolgreich waren, stoppe die Simulation**
+    if tests_passed == len(test_cases):
+        cocotb.log.info("✅ Alle Tests erfolgreich abgeschlossen! Simulation wird beendet.")
+        raise cocotb.result.TestSuccess("✅ Simulation erfolgreich beendet!")
+    else:
+        cocotb.log.error("❌ Nicht alle Tests waren erfolgreich! Simulation läuft weiter zur Analyse.")
+

@@ -9,12 +9,12 @@ You can also include images in this folder and reference them in the markdown. E
 
 ## How it works
 
-Explain how your project works
+This ASIC compresses ASCII characters into Huffman codes, using a lookup table.
 
 ## How to test
 
-Explain how to use your project
+Send an ASCII character to ui[6:0], set ui[7] = 1 (Load), wait for valid_out = 1, then read the Huffman code from uo and uio.
 
 ## External hardware
 
-List external hardware used in your project (e.g. PMOD, LED display, etc), if any
+To communicate with the ASIC, you need either the RP2040 or an external MCU to send ASCII input and read the compressed Huffman output.
