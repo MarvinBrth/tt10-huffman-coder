@@ -14,7 +14,8 @@ module huffman_coder (
 
 
     wire [9:0] code;        // Huffman code from table
-    wire [3:0] length;      // Length of the Huffman code from table      
+    wire [3:0] length;      // Length of the Huffman code from table
+    reg load_prev = 0;      
          
 
     // FSM states
@@ -34,7 +35,7 @@ module huffman_coder (
         .bit_length(length)
     );
 
-    reg load_prev; 
+     
      
 
 always @(posedge clk or posedge reset) begin
@@ -60,7 +61,7 @@ always @(posedge clk or posedge reset) begin
     end
 end
 
-// Output logic: valid_out bleibt länger HIGH
+
 always @(posedge clk or posedge reset) begin
     if (reset) begin
         huffman_out <= 10'b0;
@@ -76,10 +77,12 @@ always @(posedge clk or posedge reset) begin
                 bit_length <= length;
             end
             OUTPUT: begin
-                valid_out <= 1; // **Bleibt HIGH, bis load von 0 → 1 wechselt**
+                valid_out <= 1; 
             end
         endcase
         end
+        $display("Time: %t | UI_IN: %b | VALID: %b | VALID_OUT: %b | HUFFMAN_OUT: %b | BIT_LENGTH: %b | STATE: %b", 
+        $time, ascii, valid, valid_out, huffman_out, bit_length, current_state);
     end
 
 endmodule
