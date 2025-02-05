@@ -72,8 +72,9 @@ async def test_tt_um_huffman_coder(dut):
         cocotb.log.info(f"⬇ `load` LOW für ASCII={chr(ascii_value)}")
 
         # **Huffman-Code auslesen**
-        huffman_out = ((dut.uio_out.value.integer & 0b11) << 8) | (dut.uo_out.value.integer & 0xFF)  
-        length_out = (dut.uio_out.value.integer >> 3) & 0xF  # Länge aus Bits 6:3 extrahieren
+        await RisingEdge(dut.clk)  
+        huffman_out = ((dut.uio_out.value.integer & 0b11) << 8) | (dut.uo_out.value.integer & 0xFF)
+        length_out = (dut.uio_out.value.integer >> 3) & 0xF
 
         # **Debug-Ausgabe**
         cocotb.log.info(f"✅ Erwartet: Huffman={bin(expected_code)}, Länge={expected_length} | "
