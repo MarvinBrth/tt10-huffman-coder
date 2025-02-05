@@ -15,7 +15,6 @@ module tt_um_huffman_coder (
     wire [9:0] huffman_out;    // Huffman code output
     wire [3:0] bit_length;     // Huffman code length
     wire valid_out;            // Valid signal
-    wire load = ui_in[7];      // Load signal from MSB of ui_in
     wire reset = ~rst_n;       // Active-high reset
 
     // Assign outputs
