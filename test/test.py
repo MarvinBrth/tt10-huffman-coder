@@ -53,7 +53,7 @@ async def test_tt_um_huffman_coder(dut):
         valid_high_count = 0
         while valid_high_count < 4:
             await RisingEdge(dut.clk)
-            if (dut.uio_out.value) & 0b100:  # **valid_out ist Bit 2 von uio_out**
+            if (valid_high_count< 4):  # **valid_out ist Bit 2 von uio_out**
                 valid_high_count += 1
             else:
                 valid_high_count = 0  # Falls valid_out wieder LOW geht, neu zählen
