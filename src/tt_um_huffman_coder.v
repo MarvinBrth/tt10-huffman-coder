@@ -1,5 +1,5 @@
-`default_nettype none
-
+`define default_netname none
+`timescale 1ns/1ns
 
 module tt_um_huffman_coder (
     input  wire [7:0] ui_in,    // Dedicated inputs
