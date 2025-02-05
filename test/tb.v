@@ -16,15 +16,16 @@ module tb ();
     $dumpfile("tb.vcd");       // VCD-Datei für Signalanalyse
     $dumpvars(0, tb);          // Speichere alle Signale der Testbench
     clk = 0;                   // Initialisiere Takt
-    rst_n = 0;                 // Halte Reset aktiv (Low)
+    rst_n = 1;                 // Halte Reset HIGH (setzt alle Register auf gültige Werte)
     ena = 1;                   // Aktivieren (Standard für Tiny Tapeout Designs)
     ui_in = 8'b0;              // Eingaben initialisieren
     uio_in = 8'b0;             // IO-Eingänge initialisieren
-    #10 rst_n = 1;             // Reset deaktivieren
+
+    rst_n = 0;             // Aktiviere Reset
+    #20 rst_n = 1;             // Deaktiviere Reset erst nach 20 ns
   end
 
   always #5 clk = ~clk;        // Generiere 100 MHz Takt (Periode = 10 ns)
-
 
   // Instanziere das Design unter Test (DUT)
   tt_um_huffman_coder dut (

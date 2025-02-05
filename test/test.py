@@ -3,14 +3,20 @@ from cocotb.triggers import RisingEdge, ClockCycles
 from cocotb.clock import Clock
 
 
-async def reset(dut, cycles=5):
-    """Führt einen kurzen Reset für das DUT durch, bevor es in den normalen Arbeitsmodus übergeht."""
-    cocotb.log.info("🔄 Reset wird aktiviert.")
-    dut.rst_n.value = 0  # Reset aktiv (LOW)
-    await ClockCycles(dut.clk, cycles)  # Halte Reset für einige Taktzyklen
+async def reset(dut):
+    """Setzt alle relevanten Signale auf 0 und aktiviert den Reset sofort."""
+    dut.ui_in.value = 0
+    dut.uio_out.value = 0
+    dut.uo_out.value = 0
+    dut.rst_n.value = 0  # Reset aktiv setzen
+
+    await ClockCycles(dut.clk, 5)  # Halte Reset für 5 Taktzyklen
+
     dut.rst_n.value = 1  # Reset deaktivieren
     await ClockCycles(dut.clk, 2)  # Warte auf Stabilisierung
-    cocotb.log.info(f"✅ Reset deaktiviert. rst_n = {dut.rst_n.value}")
+
+    cocotb.log.info(f"✅ Reset abgeschlossen. rst_n = {dut.rst_n.value}")
+
 
 @cocotb.test()
 async def test_tt_um_huffman_coder(dut):

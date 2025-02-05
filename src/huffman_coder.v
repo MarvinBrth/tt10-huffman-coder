@@ -16,7 +16,14 @@ module huffman_coder (
     wire [9:0] code;        // Huffman code from table
     wire [3:0] length;      // Length of the Huffman code from table
     reg load_prev = 0;      
-         
+    
+    // 🛠 ALLE Register initialisieren, um 'x' zu verhindern
+    initial begin
+        huffman_out = 10'b0;
+        bit_length = 4'b0;
+        valid_out = 0;
+        load_prev = 0;
+    end     
 
     // FSM states
     typedef enum reg [1:0] {
@@ -81,6 +88,8 @@ always @(posedge clk or posedge reset) begin
             end
         endcase
         end
+        $display("Time: %t | UI_IN: %b | VALID: %b | VALID_OUT: %b | HUFFMAN_OUT: %b | BIT_LENGTH: %b | STATE: %b", 
+        $time, ascii, valid, valid_out, huffman_out, bit_length, current_state);
     end
 
 endmodule
