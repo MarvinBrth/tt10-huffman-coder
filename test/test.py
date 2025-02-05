@@ -2,7 +2,14 @@ import cocotb
 from cocotb.triggers import RisingEdge, ClockCycles
 from cocotb.clock import Clock
 
+
+
 async def reset(dut, cycles=5):
+# Warte, bis keine 'x' oder 'z' Werte mehr vorhanden sind
+    while ("x" in dut.uio_out.value.binstr) or ("z" in dut.uio_out.value.binstr):
+        cocotb.log.warning("⚠ `uio_out` enthält `x` oder `z`, warte auf gültige Werte...")
+        await ClockCycles(dut.clk, 1)  # Warte 1 Taktzyklus
+    
     """Führt einen kurzen Reset für das DUT durch, bevor es in den normalen Arbeitsmodus übergeht."""
     cocotb.log.info("🔄 Reset wird aktiviert.")
     dut.rst_n.value = 0  # Reset aktiv (LOW)
@@ -65,6 +72,9 @@ async def test_tt_um_huffman_coder(dut):
         cocotb.log.info(f"⬇ `load` LOW für ASCII={chr(ascii_value)}")
 
         # **Huffman-Code auslesen**
+        while ("x" in dut.uio_out.value.binstr):
+            cocotb.log.warning("⚠ `uio_out` enthält `x`")
+            await ClockCycles(dut.clk, 1)  # Warte 1 Takt
         huffman_out = ((dut.uio_out.value.integer & 0b11) << 8) | (dut.uo_out.value.integer & 0xFF)  
         length_out = (dut.uio_out.value.integer >> 3) & 0xF  # Länge aus Bits 6:3 extrahieren
 
