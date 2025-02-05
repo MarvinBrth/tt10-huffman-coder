@@ -81,8 +81,6 @@ always @(posedge clk or posedge reset) begin
             end
         endcase
         end
-        $display("Time: %t | UI_IN: %b | VALID: %b | VALID_OUT: %b | HUFFMAN_OUT: %b | BIT_LENGTH: %b | STATE: %b", 
-        $time, ascii, valid, valid_out, huffman_out, bit_length, current_state);
     end
 
 endmodule
