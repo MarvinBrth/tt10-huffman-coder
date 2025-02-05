@@ -3,13 +3,7 @@ from cocotb.triggers import RisingEdge, ClockCycles
 from cocotb.clock import Clock
 
 
-
 async def reset(dut, cycles=5):
-# Warte, bis keine 'x' oder 'z' Werte mehr vorhanden sind
-    while ("x" in dut.uio_out.value.binstr) or ("z" in dut.uio_out.value.binstr):
-        cocotb.log.warning("⚠ `uio_out` enthält `x` oder `z`, warte auf gültige Werte...")
-        await ClockCycles(dut.clk, 1)  # Warte 1 Taktzyklus
-    
     """Führt einen kurzen Reset für das DUT durch, bevor es in den normalen Arbeitsmodus übergeht."""
     cocotb.log.info("🔄 Reset wird aktiviert.")
     dut.rst_n.value = 0  # Reset aktiv (LOW)
