@@ -40,8 +40,11 @@ async def test_tt_um_huffman_coder(dut):
         await ClockCycles(dut.clk, 1)  # Mindestens 1 Takt für Load
 
         # ⚡ Warten, damit der Huffman-Coder das Zeichen verarbeiten kann
-        await ClockCycles(dut.clk, 10)  
-
+        
+        while not (dut.uio_out.value.integer & (1 << 2)):  
+             await ClockCycles(dut.clk, 1)  
+        
+        await ClockCycles(dut.clk, 5)
         # Huffman-Code auslesen
         huffman_out = ((dut.uio_out.value.integer & 0b11) << 8) | (dut.uo_out.value.integer & 0xFF)
 
