@@ -17,7 +17,7 @@ module huffman_coder (
     wire [3:0] length;      // Length of the Huffman code from table
     reg load_prev = 0;      
     
-    // 🛠 ALLE Register initialisieren, um 'x' zu verhindern
+
     initial begin
         huffman_out = 10'b0;
         bit_length = 4'b0;
