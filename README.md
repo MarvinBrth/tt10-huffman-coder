@@ -50,3 +50,9 @@ ___
 
 5️⃣ Hold Output Until Acknowledged:
 - The encoded data and valid_out remain stable until a new load pulse signals that the data has been read and a new ASCII character is available for processing.
+___
+## 2D-Preview
+![GDS](https://github.com/MarvinBrth/tt10-huffman-coder/blob/main/2D_Preview.png)
+___
+## 3D-Preview
+[Click here to view](https://gds-viewer.tinytapeout.com/?model=https://marvinbrth.github.io/tt10-huffman-coder/tinytapeout.gds.gltf)
