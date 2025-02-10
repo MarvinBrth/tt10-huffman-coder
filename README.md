@@ -1,32 +1,39 @@
-🔠 What is the Huffman_Coder?
+# Huffman Coder
+
+## 🔠 What is the Huffman_Coder?
 The Huffman_Coder ASIC is a hardware implementation of Huffman encoding, a lossless data compression method commonly used in data transmission and storage. This design uses a static Huffman tree generated from statistical letter frequency data in the English language.
+___
 
-📅 Invention
+## 📅 Invention
 Huffman coding was invented in 1952 by David A. Huffman at MIT as an optimal lossless compression algorithm.
+___
 
-🔍 Modern Uses
+## 🔍 Modern Uses
 ✅ 📁 File Compression → Used in ZIP, GZIP, 7z and PNG for efficient storage.
 ✅ 🎵 Audio & Video → Found in MP3, FLAC, JPEG, H.264 for high-quality compression.
 ✅ 📡 Data Transmission → Used in fax machines, telephony, and networking protocols.
 ✅ 📚 Text Compression → Helps optimize PDF, PostScript, and text file formats.
+___
 
-📊 Huffman Frequency Data  
+## 📊 Huffman Frequency Data  
 The frequency data used for building the Huffman tree is available in this repository.  
 👉 [View the CSV file](https://github.com/MarvinBrth/tt10-huffman-coder/ascii_frequencies.csv)
 Total analyzed characters (including spaces): 700,104,889 characters.
+ ___
 
-📌 Pin Configuration
-Input:
+## 📌 Pin Configuration
+### Input:
 ui_in[7] Load signal
 ui_in[6:0]	Input	ASCII value of the character to encode
 
-Output:
+### Output:
 uo_out[7:0]	Output huffman_out[7:0]
 uio_out[1:0] Output	huffman_out[9:8]
 uio_out[3:0]	Output	Huffman code length (number of bits)
 uio_out[2] = valid_out
+___
 
-🔧 Functionality
+## 🔧 Functionality
 1️⃣ Apply ASCII Input:
 - The ASCII character is provided on ui_in[6:0].
 
