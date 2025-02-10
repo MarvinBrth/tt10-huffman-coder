@@ -1,41 +1,45 @@
-![](../../workflows/gds/badge.svg) ![](../../workflows/docs/badge.svg) ![](../../workflows/test/badge.svg) ![](../../workflows/fpga/badge.svg)
+🔠 What is the Huffman_Coder?
+The Huffman_Coder ASIC is a hardware implementation of Huffman encoding, a lossless data compression method commonly used in data transmission and storage. This design uses a static Huffman tree generated from statistical letter frequency data in the English language.
 
-# Tiny Tapeout Verilog Project Template
+📅 Invention
+Huffman coding was invented in 1952 by David A. Huffman at MIT as an optimal lossless compression algorithm.
 
-- [Read the documentation for project](docs/info.md)
+🔍 Modern Uses
+✅ 📁 File Compression → Used in ZIP, GZIP, 7z and PNG for efficient storage.
+✅ 🎵 Audio & Video → Found in MP3, FLAC, JPEG, H.264 for high-quality compression.
+✅ 📡 Data Transmission → Used in fax machines, telephony, and networking protocols.
+✅ 📚 Text Compression → Helps optimize PDF, PostScript, and text file formats.
 
-## What is Tiny Tapeout?
+📊 Huffman Frequency Data  
+The frequency data used for building the Huffman tree is available in this repository.  
+👉 [View the CSV file](https://github.com/MarvinBrth/tt10-huffman-coder/ascii_frequencies.csv)
+Total analyzed characters (including spaces): 700,104,889 characters.
 
-Tiny Tapeout is an educational project that aims to make it easier and cheaper than ever to get your digital and analog designs manufactured on a real chip.
+📌 Pin Configuration
+Input:
+ui_in[7] Load signal
+ui_in[6:0]	Input	ASCII value of the character to encode
 
-To learn more and get started, visit https://tinytapeout.com.
+Output:
+uo_out[7:0]	Output huffman_out[7:0]
+uio_out[1:0] Output	huffman_out[9:8]
+uio_out[3:0]	Output	Huffman code length (number of bits)
+uio_out[2] = valid_out
 
-## Set up your Verilog project
+🔧 Functionality
+1️⃣ Apply ASCII Input:
+- The ASCII character is provided on ui_in[6:0].
 
-1. Add your Verilog files to the `src` folder.
-2. Edit the [info.yaml](info.yaml) and update information about your project, paying special attention to the `source_files` and `top_module` properties. If you are upgrading an existing Tiny Tapeout project, check out our [online info.yaml migration tool](https://tinytapeout.github.io/tt-yaml-upgrade-tool/).
-3. Edit [docs/info.md](docs/info.md) and add a description of your project.
-4. Adapt the testbench to your design. See [test/README.md](test/README.md) for more information.
+2️⃣ Confirm Data Entry with a Positive Edge on load:
+- A rising edge on load signals the ASIC to read the input data.
 
-The GitHub action will automatically build the ASIC files using [OpenLane](https://www.zerotoasiccourse.com/terminology/openlane/).
+3️⃣ Processing & Output:
+- After approximately 5 clock cycles, the ASIC outputs the Huffman-encoded value as follows:
+    - uo_out[7:0] → First 8 bits of the encoded value.
+    - uio_out[1:0] → Remaining 2 bits (if the code exceeds 8 bits).
 
-## Enable GitHub actions to build the results page
+4️⃣ Set valid_out = 1:
+- 1 clock cycle after output generation, the ASIC sets valid_out = 1, indicating that the data is ready.
 
-- [Enabling GitHub Pages](https://tinytapeout.com/faq/#my-github-action-is-failing-on-the-pages-part)
-
-## Resources
-
-- [FAQ](https://tinytapeout.com/faq/)
-- [Digital design lessons](https://tinytapeout.com/digital_design/)
-- [Learn how semiconductors work](https://tinytapeout.com/siliwiz/)
-- [Join the community](https://tinytapeout.com/discord)
-- [Build your design locally](https://www.tinytapeout.com/guides/local-hardening/)
-
-## What next?
-
-- [Submit your design to the next shuttle](https://app.tinytapeout.com/).
-- Edit [this README](README.md) and explain your design, how it works, and how to test it.
-- Share your project on your social network of choice:
-  - LinkedIn [#tinytapeout](https://www.linkedin.com/search/results/content/?keywords=%23tinytapeout) [@TinyTapeout](https://www.linkedin.com/company/100708654/)
-  - Mastodon [#tinytapeout](https://chaos.social/tags/tinytapeout) [@matthewvenn](https://chaos.social/@matthewvenn)
-  - X (formerly Twitter) [#tinytapeout](https://twitter.com/hashtag/tinytapeout) [@tinytapeout](https://twitter.com/tinytapeout)
+5️⃣ Hold Output Until Acknowledged:
+- The encoded data and valid_out remain stable until a new load pulse signals that the data has been read and a new ASCII character is available for processing.
