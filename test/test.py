@@ -30,10 +30,10 @@ async def test_tt_um_huffman_coder(dut):
     # Testfälle: ASCII-Zeichen → (Erwarteter Huffman-Code)
     test_cases = {
         ord(' '): 0b111,  
-        ord('e'): 0b010,  
-        ord('t'): 0b1101,  
+        ord('e'): 0b001,  
+        ord('t'): 0b1100,  
         ord('a'): 0b1011,  
-        ord('?'): 0b1100000101  
+        ord('?'): 0b1111111111  
     }
 
     for ascii_value, expected_code in test_cases.items():

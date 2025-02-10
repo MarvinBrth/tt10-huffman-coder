@@ -18,12 +18,7 @@ module huffman_coder (
     reg load_prev = 0;      
     
 
-    initial begin
-        huffman_out = 10'b0;
-        bit_length = 4'b0;
-        valid_out = 0;
-        load_prev = 0;
-    end     
+   
 
     // FSM states
     typedef enum reg [1:0] {
