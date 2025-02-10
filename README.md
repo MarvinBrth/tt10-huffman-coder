@@ -17,7 +17,7 @@ ___
 
 ## 📊 Huffman Frequency Data  
 The frequency data used for building the Huffman tree is available in this repository.  
-👉 [View the CSV file](https://github.com/MarvinBrth/tt10-huffman-coder/ascii_frequencies.csv)
+👉 [View the CSV file](https://github.com/MarvinBrth/tt10-huffman-coder/blob/main/ascii_frequencies.csv)
 Total analyzed characters (including spaces): 700,104,889 characters.
  ___
 
