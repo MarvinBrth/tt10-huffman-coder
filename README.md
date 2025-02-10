@@ -9,10 +9,10 @@ Huffman coding was invented in 1952 by David A. Huffman at MIT as an optimal los
 ___
 
 ## 🔍 Modern Uses
-✅ 📁 File Compression → Used in ZIP, GZIP, 7z and PNG for efficient storage.
-✅ 🎵 Audio & Video → Found in MP3, FLAC, JPEG, H.264 for high-quality compression.
-✅ 📡 Data Transmission → Used in fax machines, telephony, and networking protocols.
-✅ 📚 Text Compression → Helps optimize PDF, PostScript, and text file formats.
+✅ 📁 File Compression → Used in ZIP, GZIP, 7z and PNG for efficient storage.  
+✅ 🎵 Audio & Video → Found in MP3, FLAC, JPEG, H.264 for high-quality compression.  
+✅ 📡 Data Transmission → Used in fax machines, telephony, and networking protocols.  
+✅ 📚 Text Compression → Helps optimize PDF, PostScript, and text file formats.  
 ___
 
 ## 📊 Huffman Frequency Data  
@@ -23,14 +23,14 @@ Total analyzed characters (including spaces): 700,104,889 characters.
 
 ## 📌 Pin Configuration
 ### Input:
-ui_in[7] Load signal
-ui_in[6:0]	Input	ASCII value of the character to encode
+ui_in[7] Load signal  
+ui_in[6:0]	Input	ASCII value of the character to encode  
 
 ### Output:
-uo_out[7:0]	Output huffman_out[7:0]
-uio_out[1:0] Output	huffman_out[9:8]
-uio_out[3:0]	Output	Huffman code length (number of bits)
-uio_out[2] = valid_out
+uo_out[7:0]	Output huffman_out[7:0]  
+uio_out[1:0] Output	huffman_out[9:8]  
+uio_out[3:0]	Output	Huffman code length (number of bits)  
+uio_out[2] = valid_out  
 ___
 
 ## 🔧 Functionality
