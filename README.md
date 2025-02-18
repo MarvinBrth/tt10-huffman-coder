@@ -15,17 +15,60 @@ ___
 
 ___
 
-## 📊 Huffman Frequency Data  
+## 💾 Huffman Frequency Data  
 The frequency data used to build the Huffman tree is available in this file.  
 👉 [View the CSV file](https://github.com/MarvinBrth/tt10-huffman-coder/blob/main/ascii_frequencies.csv)  
 Total analyzed characters (including spaces): **700,104,889** characters.  
 ___
+
+## **🌳 Huffman Tree**
+[![Huffman Tree](https://img.shields.io/badge/Huffman_Tree-Click_to_view-blue)](https://github.com/MarvinBrth/tt10-huffman-coder/blob/main/Huffman_Tree.png)
+
+---
+
+## **📊 Huffman Encoding Table**
+<details>
+  <summary> Click to expand Huffman encoding table</summary>
+
+| Symbol | Probability (%) | Huffman Code |
+|--------|---------------|-------------|
+| space  | 17.36        | 111         |
+| e      | 10.32        | 001         |
+| t      | 7.20         | 1100        |
+| a      | 7.16         | 1011        |
+| i      | 6.32         | 1001        |
+| o      | 6.31         | 1000        |
+| n      | 6.15         | 0111        |
+| r      | 5.45         | 0101        |
+| s      | 5.44         | 0100        |
+| h      | 4.05         | 0000        |
+| l      | 3.47         | 11010       |
+| d      | 3.14         | 10100       |
+| c      | 2.59         | 01100       |
+| u      | 2.26         | 00010       |
+| m      | 2.10         | 110111      |
+| f      | 1.85         | 110110      |
+| p      | 1.66         | 101010      |
+| g      | 1.56         | 011011      |
+| y      | 1.36         | 011010      |
+| w      | 1.31         | 000111      |
+| b      | 1.13         | 000110      |
+| v      | 0.87         | 1010110     |
+| k      | 0.53         | 10101111    |
+| x      | 0.16         | 1010111011  |
+| z      | 0.09         | 1010111010  |
+| j      | 0.09         | 1010111001  |
+| q      | 0.07         | 1010111000  |
+
+</details>
+
+---
 ## **🧮 Calculation of the efficiency**
 
 <details>
-  <summary>📜 Click to expand The calculation of the efficiency of the Huffman code </summary>
+  <summary>Click to expand The calculation of the efficiency of the Huffman code</summary>
 
-## **📌 Comparison: Fixed-Length vs. Huffman Encoding**
+### **Comparison: Fixed-Length vs. Huffman Encoding**
 A source with **<span style="font-family: 'Times New Roman', serif;">N</span>** equally likely symbols requires at least:
 
 <span>$$ L_{\text{max}} = \log_2 N $$</span>
@@ -41,7 +84,8 @@ With **Huffman encoding**, the **average bit length per symbol** is lower if the
 
 ---
 
-## **📌 Huffman Encoding Efficiency**
+## **Huffman Encoding Efficiency** 📊
+
 The efficiency of Huffman encoding is measured by comparing its **average code length** to the **theoretical lower bound**, given by entropy.
 
 ### **1️⃣ Theoretical Minimum: Entropy \( H(X) \)**
@@ -58,14 +102,13 @@ For this source:
 ---
 
 ### **2️⃣ Average Bit Length in Huffman Encoding**
-The **average code length** L is calculated by weighting each symbol’s code length by its probability:
+The **average code length** \( L \) is calculated by weighting each symbol’s code length by its probability:
 
 <span>$$ L_{\text{Huffman}} = \sum p(x) \cdot l(x) $$</span> 
 
 By applying this formula, **this Huffman code** achieves an **average code length of**:
 
 <span>$$ L_{\text{Huffman}} = 4.1291 \text{ bits} $$</span>
-
 
 ✅ **This is significantly lower than the 4.75 bits required by a fixed-length encoding!**  
 
@@ -101,43 +144,8 @@ Substituting values:
 
 </details>
 
-## **📊 Huffman Encoding Table**
-<details>
-  <summary>📜 Click to expand Huffman encoding table</summary>
 
-| Symbol | Probability (%) | Huffman Code |
-|--------|---------------|-------------|
-| space  | 17.36        | 111         |
-| e      | 10.32        | 001         |
-| t      | 7.20         | 1100        |
-| a      | 7.16         | 1011        |
-| i      | 6.32         | 1001        |
-| o      | 6.31         | 1000        |
-| n      | 6.15         | 0111        |
-| r      | 5.45         | 0101        |
-| s      | 5.44         | 0100        |
-| h      | 4.05         | 0000        |
-| l      | 3.47         | 11010       |
-| d      | 3.14         | 10100       |
-| c      | 2.59         | 01100       |
-| u      | 2.26         | 00010       |
-| m      | 2.10         | 110111      |
-| f      | 1.85         | 110110      |
-| p      | 1.66         | 101010      |
-| g      | 1.56         | 011011      |
-| y      | 1.36         | 011010      |
-| w      | 1.31         | 000111      |
-| b      | 1.13         | 000110      |
-| v      | 0.87         | 1010110     |
-| k      | 0.53         | 10101111    |
-| x      | 0.16         | 1010111011  |
-| z      | 0.09         | 1010111010  |
-| j      | 0.09         | 1010111001  |
-| q      | 0.07         | 1010111000  |
-
-</details>
-
----
+___ 
 
 ## 📌 Pin Configuration
 ### **Input:**
