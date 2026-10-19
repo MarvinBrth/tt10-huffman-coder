@@ -91,7 +91,7 @@ This is the lower bound for the average length of a binary prefix code for this 
 ### **2️⃣ Average Bit Length in Huffman Encoding**
 Weighting each actual code length by its symbol probability gives:
 
-$L_{\text{Huffman}} = \sum p(x)\,l(x) = 4.1289 \text{ bits/symbol}$
+$L_{\text{Huffman}} = \sum p(x) \cdot l(x) = 4.1289 \text{ bits/symbol}$
 
 ✅ **This is the expected payload size per character for the frequency data above.** A particular text can have a different average.
 
