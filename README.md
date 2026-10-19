@@ -147,6 +147,26 @@ Substituting values:
 
 ___ 
 
+## 🧪 Silicon Test: Full Bible
+
+**IHP25a · ETR v3.2 · 75 MHz · one character every 3 clocks.**
+The complete [King James Bible](https://www.gutenberg.org/ebooks/10) (66 books), normalized to lowercase `a–z` and spaces:
+
+| Measurement | Result |
+|---|---:|
+| Input (8-bit ASCII) | **4,012,049 bytes** |
+| Compressed file, including 8-byte header | **2,050,160 bytes** |
+| Storage saved | **1,961,889 bytes (48.90%)** |
+| Encoding, USB transfer, checks & bit packing | **51.82 s** |
+| Total including decoding & byte comparison | **64.60 s** |
+| Active ASIC clock time (calculated, not measured) | **0.1609 s** |
+
+✅ The entire text was captured once, then all outputs were checked. The decoded text matches the normalized input **byte for byte**.
+
+📊 **4.088 bits/character** exactly matches the codebook prediction for this text (**16,401,215 bits**). The **4.1291 bits** above uses different symbol frequencies. Savings here use **8-bit ASCII**, unlike the earlier 27-symbol comparison; text normalization is excluded from the savings.
+
+___
+
 ## 📌 Pin Configuration
 ### **Input:**
 - `ui_in[7]` → Load signal  
@@ -155,7 +175,7 @@ ___
 ### **Output:**
 - `uo_out[7:0]` → Huffman-encoded value (first 8 bits)  
 - `uio_out[1:0]` → Remaining 2 bits (if code > 8 bits)  
-- `uio_out[3:0]` → Huffman code length  
+- `uio_out[6:3]` → Huffman code length
 - `uio_out[2]` → Valid output signal  
 
 ___
@@ -168,10 +188,10 @@ ___
    - A rising edge on `load` signals the ASIC to process the input.  
 
 3️⃣ **Processing & Output**  
-   - After ~5 clock cycles, the ASIC outputs the Huffman-encoded value.  
+   - Counting the LOAD capture as rising edge 1, the code appears on rising edge **3**.
 
 4️⃣ **Set valid_out = 1**  
-   - One clock cycle later, `valid_out = 1` indicates data is ready.  
+   - On rising edge **4**, `valid_out = 1` indicates data is ready. New inputs can arrive every **3 clocks**.
 
 5️⃣ **Hold Output Until Acknowledged**  
    - The encoded data remains stable until a new `load` pulse signals new input.  
