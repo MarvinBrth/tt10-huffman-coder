@@ -71,9 +71,7 @@ ___
 ### **Comparison: Fixed-Length vs. Huffman Encoding**
 The alphabet contains **27 symbols**: lowercase `a–z` and space. A fixed-width binary code needs a whole number of bits per symbol:
 
-```math
-L_{\text{fixed}} = \lceil \log_2 27 \rceil = 5 \text{ bits/symbol}
-```
+$L_{\text{fixed}} = \lceil \log_2 27 \rceil = 5 \text{ bits/symbol}$
 
 💡 **8-bit ASCII uses 8 bits/symbol.** The value $\log_2 27 \approx 4.7549$ is the entropy of 27 equally likely symbols, not the width of a fixed-length binary code.
 
@@ -84,9 +82,7 @@ The calculations below use the counts in [ascii_frequencies.csv](ascii_frequenci
 ### **1️⃣ Theoretical Minimum: Entropy**
 The entropy of the single-symbol probability distribution is:
 
-```math
-H(X) = -\sum p(x)\log_2 p(x) = 4.0973 \text{ bits/symbol}
-```
+$H(X) = -\sum p(x)\log_2 p(x) = 4.0973 \text{ bits/symbol}$
 
 This is the lower bound for the average length of a binary prefix code for this distribution. Compression that also exploits relationships between characters can achieve a different rate.
 
@@ -95,9 +91,7 @@ This is the lower bound for the average length of a binary prefix code for this 
 ### **2️⃣ Average Bit Length in Huffman Encoding**
 Weighting each actual code length by its symbol probability gives:
 
-```math
-L_{\text{Huffman}} = \sum p(x)\,l(x) = 4.1289 \text{ bits/symbol}
-```
+$L_{\text{Huffman}} = \sum p(x)\,l(x) = 4.1289 \text{ bits/symbol}$
 
 ✅ **This is the expected payload size per character for the frequency data above.** A particular text can have a different average.
 
@@ -106,9 +100,7 @@ L_{\text{Huffman}} = \sum p(x)\,l(x) = 4.1289 \text{ bits/symbol}
 ### **3️⃣ Storage Savings**
 Storage savings use the **actual average code length**, rather than entropy:
 
-```math
-\text{Savings} = 1 - \frac{L_{\text{Huffman}}}{L_{\text{reference}}}
-```
+$\text{Savings} = 1 - \frac{L_{\text{Huffman}}}{L_{\text{reference}}}$
 
 | Reference format | Bits/symbol | Expected payload savings |
 |---|---:|---:|
@@ -122,9 +114,7 @@ Storage savings use the **actual average code length**, rather than entropy:
 ### **4️⃣ Encoding Efficiency**
 The ratio of entropy to average code length measures how closely the code approaches the single-symbol entropy bound:
 
-```math
-\eta = \frac{H(X)}{L_{\text{Huffman}}} = \frac{4.0973}{4.1289} \approx 0.9923
-```
+$\eta = \frac{H(X)}{L_{\text{Huffman}}} = \frac{4.0973}{4.1289} \approx 0.9923$
 
 ✅ **99.23% efficiency** for the source distribution above.
 
