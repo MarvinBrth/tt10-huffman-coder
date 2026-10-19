@@ -66,88 +66,66 @@ ___
 ## **🧮 Calculation of the efficiency**
 
 <details>
-  <summary>Click to expand The calculation of the efficiency of the Huffman code</summary>
+  <summary>Click to expand the calculation of the efficiency of the Huffman code</summary>
 
 ### **Comparison: Fixed-Length vs. Huffman Encoding**
-A source with **<span style="font-family: 'Times New Roman', serif;">N</span>** equally likely symbols requires at least:
+The alphabet contains **27 symbols**: lowercase `a–z` and space. A fixed-width binary code needs a whole number of bits per symbol:
 
-<span>$$ L_{\text{max}} = \log_2 N $$</span>
+$$ L_{\text{fixed}} = \lceil \log_2 27 \rceil = 5 \text{ bits/symbol} $$
 
-💡 **Example:**
-- A source with **27 symbols**, all equally likely, would require:
+💡 **8-bit ASCII uses 8 bits/symbol.** The value $\log_2 27 \approx 4.7549$ is the entropy of 27 equally likely symbols, not the width of a fixed-length binary code.
 
-<span>$$ L_{\text{max}} = \log_2 27 = 4.75 \text{ bits} $$</span>
-
-👉 **This means that each symbol must use at least 4.75 bits, even if some appear far more frequently than others.**  
-
-With **Huffman encoding**, the **average bit length per symbol** is lower if the source entropy is smaller than fixed-length encoding.
+The calculations below use the counts in [ascii_frequencies.csv](ascii_frequencies.csv), restricted to these 27 symbols and normalized to **700,104,889 characters**.
 
 ---
 
-## **Huffman Encoding Efficiency** 📊
+### **1️⃣ Theoretical Minimum: Entropy**
+The entropy of the single-symbol probability distribution is:
 
-The efficiency of Huffman encoding is measured by comparing its **average code length** to the **theoretical lower bound**, given by entropy.
+$$ H(X) = -\sum p(x)\log_2 p(x) = 4.0973 \text{ bits/symbol} $$
 
-### **1️⃣ Theoretical Minimum: Entropy \( H(X) \)**
-The **entropy of a source** represents the **absolute minimum number of bits needed per symbol** in an ideal lossless encoding:
-
-<span>$$ H(X) = - \sum p(x) \log_2 p(x) $$</span>
-
-For this source:
-
-<span>$$ H(X) = 4.0975 \text{ bits} $$</span>
-
-👉 **No lossless encoding can use fewer than 4.0975 bits per symbol.** 
+This is the lower bound for the average length of a binary prefix code for this distribution. Compression that also exploits relationships between characters can achieve a different rate.
 
 ---
 
 ### **2️⃣ Average Bit Length in Huffman Encoding**
-The **average code length** \( L \) is calculated by weighting each symbol’s code length by its probability:
+Weighting each actual code length by its symbol probability gives:
 
-<span>$$ L_{\text{Huffman}} = \sum p(x) \cdot l(x) $$</span> 
+$$ L_{\text{Huffman}} = \sum p(x)\,l(x) = 4.1289 \text{ bits/symbol} $$
 
-By applying this formula, **this Huffman code** achieves an **average code length of**:
-
-<span>$$ L_{\text{Huffman}} = 4.1291 \text{ bits} $$</span>
-
-✅ **This is significantly lower than the 4.75 bits required by a fixed-length encoding!**  
+✅ **This is the expected payload size per character for the frequency data above.** A particular text can have a different average.
 
 ---
 
-### **3️⃣ Savings Compared to Fixed-Length Encoding**
-To measure storage savings:
+### **3️⃣ Storage Savings**
+Storage savings use the **actual average code length**, rather than entropy:
 
-<span>$$ \text{Savings} = 1 - \frac{H(X)}{L_{\text{max}}} $$</span>
+$$ \text{Savings} = 1 - \frac{L_{\text{Huffman}}}{L_{\text{reference}}} $$
 
-Substituting values:
+| Reference format | Bits/symbol | Expected payload savings |
+|---|---:|---:|
+| 8-bit ASCII | 8 | **48.39%** |
+| Fixed-width code for 27 symbols | 5 | **17.42%** |
 
-<span>$$ \text{Savings} = 1 - \frac{4.0975}{4.75} = 13.72\% $$</span>
-
-✅ **This Huffman code reduces storage by 13.72% compared to fixed-length encoding!** 🎯  
+📊 These predictions exclude file headers and final byte padding. Use the same reference format when comparing them with a practical test.
 
 ---
 
 ### **4️⃣ Encoding Efficiency**
-To measure how close Huffman encoding is to the theoretical minimum, we calculate efficiency:
+The ratio of entropy to average code length measures how closely the code approaches the single-symbol entropy bound:
 
-<span>$$ \eta = \frac{H(X)}{L} $$</span>
+$$ \eta = \frac{H(X)}{L_{\text{Huffman}}} = \frac{4.0973}{4.1289} \approx 0.9923 $$
 
-Substituting values:
-
-<span>$$ \eta = \frac{4.0975}{4.1291} = 0.9924 $$</span>
-
-🔹 **Interpretation of efficiency <span style="font-family: 'Times New Roman', serif;">η</span>:**
-- **If <span style="font-family: 'Times New Roman', serif;">η</span> ≈ 1** → **Highly efficient encoding ✅**  
-- **If <span style="font-family: 'Times New Roman', serif;">η</span> > 1** → **Impossible ❌** (No encoding can be better than entropy)  
-
-👉 **This Huffman code achieves <span style="font-family: 'Times New Roman', serif;">η</span> = 0.9924, meaning it is very close to optimal efficiency!** 🎯  
+✅ **99.23% efficiency** for the source distribution above.
 
 </details>
 
+___
 
-___ 
+## 🧪 Practical Test: Full Bible
 
-## 🧪 Silicon Test: Full Bible
+<details>
+  <summary>Click to expand the practical test results</summary>
 
 **IHP25a · ETR v3.2 · 75 MHz · one character every 3 clocks.**
 The complete [King James Bible](https://www.gutenberg.org/ebooks/10) (66 books), normalized to lowercase `a–z` and spaces:
@@ -157,13 +135,18 @@ The complete [King James Bible](https://www.gutenberg.org/ebooks/10) (66 books),
 | Input (8-bit ASCII) | **4,012,049 bytes** |
 | Compressed file, including 8-byte header | **2,050,160 bytes** |
 | Storage saved | **1,961,889 bytes (48.90%)** |
-| Encoding, USB transfer, checks & bit packing | **51.82 s** |
-| Total including decoding & byte comparison | **64.60 s** |
-| Active ASIC clock time (calculated, not measured) | **0.1609 s** |
+| Ideal ASIC payload time, excluding transfer, checks & packing (calculated) | **0.1605 s** |
+| Capture & USB transfer, before output verification and packing (measured) | **45.70 s** |
+| Encoding, USB transfer, checks & bit packing (measured) | **51.82 s** |
+| Total including decoding & byte comparison (measured) | **64.60 s** |
+
+⏱️ Ideal time: **4,012,049 × 3 / 75,000,000 = 0.16048196 s**, or **25 million characters/s** during uninterrupted input. This is calculated ASIC payload time; transfer, pauses between bursts and PC packing take additional time. The measured 45.70 s still includes buffer preparation and transport integrity checks.
 
 ✅ The entire text was captured once, then all outputs were checked. The decoded text matches the normalized input **byte for byte**.
 
-📊 **4.088 bits/character** exactly matches the codebook prediction for this text (**16,401,215 bits**). The **4.1291 bits** above uses different symbol frequencies. Savings here use **8-bit ASCII**, unlike the earlier 27-symbol comparison; text normalization is excluded from the savings.
+📊 The measured **16,401,215 payload bits** (**4.0880 bits/character**) exactly match the codebook prediction for this text. The general prediction above is **48.39%** savings versus the same 8-bit ASCII baseline; the Bible reaches **48.90%** because its symbol frequencies differ. Savings include the header and padding, exclude normalization, and assume the decoder knows the fixed codebook.
+
+</details>
 
 ___
 
